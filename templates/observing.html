@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+{% block content %}
+<br>
+<br>
+<h2 style="margin-left: 10%">Team {{team_name}}</h2>
+<br>
+<br>
+<div>
+    <!-- adding button and heading to show the digits -->
+    <!-- increment() and decrement() functions on button click-->
+    <button onclick="increment()" class="btn btn-primary btn-lg" name="balls_shot" style="margin-left: 10%; display: inline-block;">Ball Shot</button><button onclick="decrement1()" class="btn btn-primary btn-lg" style="display: inline-block; float: right; margin-right: 15%;">Oopsy</button><h2 id="counting" style="float: right; margin-right: 25%;"></h2>
+    <br>
+    <br>
+    <button onclick="increment2()" class="btn btn-primary btn-lg" name="balls_shot" style="margin-left: 10%; display: inline-block;">Accident</button><button onclick="decrement2()" class="btn btn-primary btn-lg" style="display: inline-block; float: right; margin-right: 15%;">Oopsy</button><h2 id="counting2" style="float: right; margin-right: 25%;"></h2>
+    <br>
+    <br>
+    <button onclick="increment3()" class="btn btn-primary btn-lg" name="balls_shot" style="margin-left: 10%; display: inline-block;">Event 1</button><button onclick="decrement3()" class="btn btn-primary btn-lg" style="display: inline-block; float: right; margin-right: 15%;">Oopsy</button><h2 id="counting3" style="float: right; margin-right: 25%;"></h2>
+    <br>
+    <br>
+    <button onclick="increment4()" class="btn btn-primary btn-lg" name="balls_shot" style="margin-left: 10%; display: inline-block;">Event 2</button><button onclick="decrement4()" class="btn btn-primary btn-lg" style="display: inline-block; float: right; margin-right: 15%;">Oopsy</button><h2 id="counting4" style="float: right; margin-right: 25%;"></h2>
+    <br>
+    <br>
+    <br>
+    <form id="team_notes" method="POST" action="/" class="row g-3" style="margin-left: 10%; margin-right: 10%;">
+        <label for="inputPassword2" class="visually-hidden">Extra Notes</label>
+        <input type="text" name="team_name" class="form-control" id="inputPassword2" placeholder="Extra Notes">
+        <!-- <button onclick = "submit()" type="submit" class="btn btn-primary mb-3" name="notes" value="notes">Save Session Notes</button> -->
+    </form>
+    <br>
+    <br>
+    <button onclick="submit()" class="btn btn-primary btn-lg" name="balls_shot" style="margin-left: 10%; display: inline-block;">Submit Session</button> <h2 id="counting4" style="float: right; margin-right: 50%;"></h2>
+</div>
+<!-- JavaScript code-->
+<script>
+    //initialising a variable name data
+    var data = 0;
+    var data2 = 0;
+    var data3 = 0;
+    var data4 = 0;
+
+    //printing default value of data that is 0 in h2 tag
+    document.getElementById("counting").innerText = data;
+    document.getElementById("counting2").innerText = data2;
+    document.getElementById("counting3").innerText = data3;
+    document.getElementById("counting4").innerText = data4;
+
+    //creation of increment function
+    function increment() {
+        data = data + 1;
+        document.getElementById("counting").innerText = data;
+    }
+    function increment2() {
+        data2 = data2 + 1;
+        document.getElementById("counting2").innerText = data2;
+    }
+    function increment3() {
+        data3 = data3 + 1;
+        document.getElementById("counting3").innerText = data3;
+    }
+    function increment4() {
+        data4 = data4 + 1;
+        document.getElementById("counting4").innerText = data4;
+    }
+    
+    function submit(){
+        var team_data = {
+            'balls_shot': data,
+            'accidents': data2, 
+            'e1': data3, 
+            'e2': data4
+            }
+
+        var elements = document.getElementById("team_notes").elements;
+        for(var i = 0 ; i < elements.length ; i++){
+            var item = elements.item(i);
+            team_data['notes'] = item.value;
+        }
+
+        // document.getElementById("demo").innerHTML = JSON.stringify(obj);
+
+        
+        fetch("/observing",
+            {
+                method: "POST",
+                headers: {'Content-Type': 'application/json'}, 
+                body: JSON.stringify(team_data)}).then(res => {console.log("Request complete! response:", res);
+            }
+        );
+        // $.ajax({
+        // url: Flask.url_for('/observing'),
+        // type: 'POST',
+        // data: JSON.stringify(team_data),   // converts js value to JSON string
+        // })
+        // .done(function(result){     // on success get the return object from server
+        //     console.log(result)     // do whatever with it. In this case see it in console
+        // })
+    }
+    //creation of decrement function
+    function decrement1() {
+        data = data - 1;
+        document.getElementById("counting").innerText = data;
+    }
+    function decrement2() {
+        data2 = data2 - 1;
+        document.getElementById("counting2").innerText = data2;
+    }
+    function decrement3() {
+        data3 = data3 - 1;
+        document.getElementById("counting3").innerText = data3;
+    }
+    function decrement4() {
+        data4 = data4 - 1;
+        document.getElementById("counting4").innerText = data4;
+    }
+</script>
+<form method = "POST" action='/observing' style = "margin-left: 10%">
+    <!-- <form method ="post" action="/observing">
+        <button type="submit" name="ball_shot" value="ball_shot" class="btn btn-primary btn-lg">Ball Shot</button>&nbsp;&nbsp;
+        <button type="submit" name="accident" value="accident" class="btn btn-primary btn-lg">Accident Happened</button>&nbsp;&nbsp;
+        <button type="submit" name="e1" value="e1" class="btn btn-primary btn-lg">Event 1</button>&nbsp;&nbsp;
+        <button type="submit" name="e2" value="e2" class="btn btn-primary btn-lg">Event 2</button>&nbsp;&nbsp;
+    </form>  -->
+    <!-- <div class="mb-3">
+        <label for="exampleInputPassword1" class="form-label">Team Name</label>
+        <br>
+        <input type="button" value="Team1">
+        <input type="button" value="Team2">
+        <input type="button" value="Team3">
+        <input type="button" value="Team4">
+        <br>
+        <br>
+        <br>
+        <input type="text" class="form-control" id="exampleInputPassword1" name = "team_name">
+        <label for="exampleInputPassword1" class="form-label">Notes on Team</label>
+        <br>
+        <input type="button" value="Ball Shot" name="ball_shot">
+        <input type="button" value="Some Action" name="">
+        <input type="button" value="Some Action">
+        <input type="button" value="Some Action">
+        <input type="button" value="Some Action">
+        <input type="text" class="form-control" id="exampleInputPassword1" name = "notes">
+    </div>
+    <div class="mb-3">
+        <label for="exampleInputPassword1" class="form-label">Crop Type</label></br>
+            <select name="type" id="crops">
+        </select>
+    </div> -->
+    <!--
+    <div class="mb-3 form-check">
+    <input type="checkbox" class="form-check-input" id="exampleCheck1">
+    <label class="form-check-label" for="exampleCheck1">Check me out</label>
+    </div> -->
+    <!-- <button type="submit" class="btn btn-primary">Submit</button> -->
+    </br></br>
+</form>
+{% endblock %}
