@@ -5,6 +5,7 @@ from pprint import pprint
 import json
 from multiprocessing import Value
 import time
+import pandas as pd
 
 balls_shot = Value('i', 0)
 accidents = Value('i', 0)
@@ -55,22 +56,63 @@ def observation():
             if key == "notes":
                 notes = val
              
-        sheet = init_sheet()
+        # sheet = init_sheet()
 
         with open('./team_name.txt', 'r') as f:
             name = f.read()
 
         data = {
             'team_name': name,
-            'balls_shot': request.json['balls_shot'],
+            'boxes_carried': request.json['boxes_carried'],
+            'boxes_controlled': request.json['boxes_controlled'],
             'accidents': request.json['accidents'],
-            'e1': request.json['e1'],
             'e2': request.json['e2'],
             'notes': request.json['notes']
         }
 
         print(request.json)
 
+        df = pd.read_csv('./observations/BunnyBots.csv')
+        df = pd.read_csv('./observations/BunnyBots.csv')
+
+        data = {
+            'team_name': pd.Series([data['team_name']]),
+            'boxes_carried': pd.Series([data['boxes_carried']]),
+            'boxes_controlled': pd.Series([data['boxes_controlled']]),
+            'accidents': pd.Series([data['accidents']]),
+            'notes': pd.Series([data['notes']])
+        }
+
+        df = df.append(pd.DataFrame(data), ignore_index=True)
+
+        df.to_csv('./observations/BunnyBots.csv', index=False) 
+
+        '''
+        team_name = list(df['Team_Name'])
+        print(team_name)
+        boxes_carried = list(df['Boxes_Carried'])
+        boxes_controlled = list(df['Boxes_Controlled'])
+        accidents = list(df['Accidents'])
+
+        team_name.append(data['team_name'])
+        boxes_carried.append(data['boxes_carried'])
+        boxes_controlled.append(data['boxes_controlled'])
+        accidents.append(data['accidents'])
+
+        df['team_name'] = pd.Series(team_name)
+        df['boxes_carried'] = pd.Series(boxes_carried)
+        df['boxes_controlled'] = pd.Series(boxes_controlled)
+        df['accidents'] = pd.Series(accidents)
+
+        df.to_csv('./observations/BunnyBots.csv', ignore_index=True) 
+        '''
+
+        # df = pd.DataFrame(data)
+
+        # df.to_csv(f'./observations/{name}')
+
+        '''
+        # sheets API update calls
         sheet = init_sheet()
 
         col1 = sheet.col_values(1)
@@ -82,6 +124,7 @@ def observation():
         sheet.update_cell(team_index, 4, data['e1'])
         sheet.update_cell(team_index, 5, data['e2'])
         sheet.update_cell(team_index, 6, data['notes'])
+        '''
                 
         # sheet.update_cell(2, 1, name)
         return render_template('home.html')
