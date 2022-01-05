@@ -66,7 +66,7 @@ def observation():
             'boxes_carried': request.json['boxes_carried'],
             'boxes_controlled': request.json['boxes_controlled'],
             'accidents': request.json['accidents'],
-            'e2': request.json['e2'],
+            'penalty': request.json['penalty'],
             'notes': request.json['notes']
         }
 
@@ -80,6 +80,7 @@ def observation():
             'boxes_carried': pd.Series([data['boxes_carried']]),
             'boxes_controlled': pd.Series([data['boxes_controlled']]),
             'accidents': pd.Series([data['accidents']]),
+            'penalty': pd.Series([data['penalty']]),
             'notes': pd.Series([data['notes']])
         }
 
